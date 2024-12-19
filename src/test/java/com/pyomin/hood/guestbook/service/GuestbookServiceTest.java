@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.pyomin.hood.guestbook.dto.WriteGuestbookDto;
+import com.pyomin.hood.guestbook.dto.GuestbookDto;
 import com.pyomin.hood.guestbook.entity.Guestbook;
 import com.pyomin.hood.guestbook.repository.GuestbookRepository;
 
@@ -28,12 +28,12 @@ public class GuestbookServiceTest {
     @InjectMocks
     private GuestbookServiceImpl guestbookService;
 
-    private WriteGuestbookDto writeGuestbookDto;
+    private GuestbookDto writeGuestbookDto;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        writeGuestbookDto = new WriteGuestbookDto("author", "password", "message");
+        writeGuestbookDto = new GuestbookDto("author", "password", "message");
     }
 
     @Test
@@ -50,7 +50,7 @@ public class GuestbookServiceTest {
         when(guestbookRepository.save(any(Guestbook.class))).thenReturn(guestbook);
 
         // when
-        WriteGuestbookDto writtenGuestbookDto = guestbookService.write(writeGuestbookDto);
+        GuestbookDto writtenGuestbookDto = guestbookService.write(writeGuestbookDto);
 
         // then
         assertNotNull(writtenGuestbookDto);

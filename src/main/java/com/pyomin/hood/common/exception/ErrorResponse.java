@@ -11,6 +11,5 @@ public class ErrorResponse {
     private String message;
     private String errorCode;
     private String details;
-    private LocalDateTime timestamp;    
-    
+    private LocalDateTime timestamp;
 }

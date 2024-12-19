@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class WriteGuestbookDto {
+public class GuestbookDto {
 
     private Long id;
     private String author;
@@ -18,28 +18,28 @@ public class WriteGuestbookDto {
     private String message;
     private LocalDateTime createdAt;
 
-    public WriteGuestbookDto(Long id, String author, String message, LocalDateTime createdAt) {
+    public GuestbookDto(Long id, String author, String message, LocalDateTime createdAt) {
         this.id = id;
         this.author = author;
         this.message = message;
         this.createdAt = createdAt;
     }
 
-    public WriteGuestbookDto(String author, String password, String message) {
+    public GuestbookDto(String author, String password, String message) {
         this.author = author;
         this.password = password;
         this.message = message;
     }
 
-    public static WriteGuestbookDto from(CreateGuestbookRequest request) {
-        return new WriteGuestbookDto(
+    public static GuestbookDto from(CreateGuestbookRequest request) {
+        return new GuestbookDto(
                 request.getAuthor(),
                 request.getPassword(),
                 request.getMessage());
     }
 
-    public static WriteGuestbookDto from(Guestbook guestbook) {
-        return new WriteGuestbookDto(
+    public static GuestbookDto from(Guestbook guestbook) {
+        return new GuestbookDto(
                 guestbook.getId(),
                 guestbook.getAuthor(),
                 guestbook.getMessage(),

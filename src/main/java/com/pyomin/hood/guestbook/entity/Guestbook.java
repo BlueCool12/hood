@@ -2,7 +2,7 @@ package com.pyomin.hood.guestbook.entity;
 
 import java.time.LocalDateTime;
 
-import com.pyomin.hood.guestbook.dto.WriteGuestbookDto;
+import com.pyomin.hood.guestbook.dto.GuestbookDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,19 +23,19 @@ public class Guestbook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "author", nullable = false)
+    @Column(nullable = false)
     private String author;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public static Guestbook from(WriteGuestbookDto dto) {
+    public static Guestbook from(GuestbookDto dto) {
         return new Guestbook(
             null,
             dto.getAuthor(),

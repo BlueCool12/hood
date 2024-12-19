@@ -19,7 +19,6 @@ public class CreateGuestbookRequest {
 
     @NotBlank(message = "메시지는 공백일 수 없습니다.")
     @Size(max = 500, message = "메시지는 최대 500글자입니다.")
-    private String message;
-
+    private String message;    
 
 }

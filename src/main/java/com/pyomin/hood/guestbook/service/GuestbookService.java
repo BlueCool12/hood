@@ -1,8 +1,8 @@
 package com.pyomin.hood.guestbook.service;
 
-import com.pyomin.hood.guestbook.dto.WriteGuestbookDto;
+import com.pyomin.hood.guestbook.dto.GuestbookDto;
 
 public interface GuestbookService {
 
-    WriteGuestbookDto write(WriteGuestbookDto dto);    
+    GuestbookDto write(GuestbookDto dto);    
 }
