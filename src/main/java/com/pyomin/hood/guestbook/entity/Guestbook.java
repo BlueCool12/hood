@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -26,7 +27,7 @@ public class Guestbook {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4)
     private String password;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -34,14 +35,5 @@ public class Guestbook {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    public static Guestbook from(GuestbookDto dto) {
-        return new Guestbook(
-            null,
-            dto.getAuthor(),
-            dto.getPassword(),
-            dto.getMessage(),
-            LocalDateTime.now()
-        );
-    }
+        
 }

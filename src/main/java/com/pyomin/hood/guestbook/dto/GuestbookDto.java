@@ -1,8 +1,6 @@
 package com.pyomin.hood.guestbook.dto;
 
 import java.time.LocalDateTime;
-
-import com.pyomin.hood.guestbook.dto.request.CreateGuestbookRequest;
 import com.pyomin.hood.guestbook.entity.Guestbook;
 
 import lombok.AllArgsConstructor;
@@ -25,17 +23,17 @@ public class GuestbookDto {
         this.createdAt = createdAt;
     }
 
-    public GuestbookDto(String author, String password, String message) {
+    public GuestbookDto(Long id, String author, String password, String message) {
+        this.id = id;
         this.author = author;
         this.password = password;
         this.message = message;
     }
 
-    public static GuestbookDto from(CreateGuestbookRequest request) {
-        return new GuestbookDto(
-                request.getAuthor(),
-                request.getPassword(),
-                request.getMessage());
+    public GuestbookDto(String author, String password, String message) {
+        this.author = author;
+        this.password = password;
+        this.message = message;
     }
 
     public static GuestbookDto from(Guestbook guestbook) {
@@ -44,6 +42,14 @@ public class GuestbookDto {
                 guestbook.getAuthor(),
                 guestbook.getMessage(),
                 guestbook.getCreatedAt());
-                
+    }
+
+    public Guestbook toGuestbook() {
+        return new Guestbook(
+                this.id,
+                this.author,
+                this.password,
+                this.message,
+                this.createdAt != null ? this.createdAt : LocalDateTime.now());
     }
 }

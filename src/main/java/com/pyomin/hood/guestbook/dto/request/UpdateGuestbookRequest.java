@@ -3,6 +3,7 @@ package com.pyomin.hood.guestbook.dto.request;
 import com.pyomin.hood.guestbook.dto.GuestbookDto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -10,8 +11,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateGuestbookRequest {
-
+public class UpdateGuestbookRequest {
+    
+    @NotNull(message = "ID는 필수입니다.")
+    private Long id;
+    
     @NotBlank(message = "작성자 이름은 공백일 수 없습니다.")
     @Size(max = 20, message = "작성자 이름은 최대 20글자입니다.")
     private String author;
@@ -25,7 +29,6 @@ public class CreateGuestbookRequest {
     private String message;
 
     public GuestbookDto toGuestbookDto() {
-        return new GuestbookDto(this.author, this.password, this.message);
+        return new GuestbookDto(this.id, this.author, this.password, this.message);
     }
-
 }
