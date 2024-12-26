@@ -13,13 +13,13 @@ import lombok.Getter;
 public class ErrorResponse {
     private String errorCode;
     private String message;
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp;    
 
     public static ErrorResponse from(ErrorCode errorCode) {
         return ErrorResponse.builder()
                 .errorCode(errorCode.getCode())
                 .message(errorCode.getMessage())
-                .timestamp(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())                
                 .build();
     }
 }

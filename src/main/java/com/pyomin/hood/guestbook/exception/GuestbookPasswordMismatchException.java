@@ -6,9 +6,9 @@ public class GuestbookPasswordMismatchException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public GuestbookPasswordMismatchException() {
-        super(ErrorCode.GUESTBOOK_PASSWORD_MISMATCH.getMessage());
-        this.errorCode = ErrorCode.GUESTBOOK_PASSWORD_MISMATCH;
+    public GuestbookPasswordMismatchException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
     public ErrorCode getErrorCode() {

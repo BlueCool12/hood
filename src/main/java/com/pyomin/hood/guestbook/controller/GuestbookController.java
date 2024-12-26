@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -51,7 +52,7 @@ public class GuestbookController {
 
     @PutMapping("/{id}")
     public ResponseWrapper<Void> updateGuestbook(@PathVariable("id") Long id,
-            @Valid @RequestBody UpdateGuestbookRequest request) {
+            @Valid @RequestBody UpdateGuestbookRequest request) {                
         GuestbookDto guestbookDto = request.toGuestbookDto();
         guestbookService.modifyGuestbook(guestbookDto);
 
@@ -59,6 +60,10 @@ public class GuestbookController {
                 .success(true)
                 .message("방명록이 성공적으로 수정되었습니다.")
                 .build();
-    }    
+    }
 
+    @DeleteMapping
+    public void deleteGuestbook(@PathVariable("id") Long id) {        
+        guestbookService.deleteGuestbook();
+    }
 }

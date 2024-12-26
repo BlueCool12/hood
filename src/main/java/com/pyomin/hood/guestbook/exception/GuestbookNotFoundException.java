@@ -6,9 +6,9 @@ public class GuestbookNotFoundException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public GuestbookNotFoundException() {
-        super(ErrorCode.GUESTBOOK_NOT_FOUND.getMessage());
-        this.errorCode = ErrorCode.GUESTBOOK_NOT_FOUND;
+    public GuestbookNotFoundException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
     public ErrorCode getErrorCode() {

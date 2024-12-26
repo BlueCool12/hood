@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+
+import com.pyomin.hood.common.exception.ErrorCode;
 import com.pyomin.hood.guestbook.dto.GuestbookDto;
 import com.pyomin.hood.guestbook.entity.Guestbook;
+import com.pyomin.hood.guestbook.exception.GuestbookNotFoundException;
+import com.pyomin.hood.guestbook.exception.GuestbookPasswordMismatchException;
 import com.pyomin.hood.guestbook.repository.GuestbookRepository;
 
 import jakarta.transaction.Transactional;
@@ -30,12 +34,12 @@ public class GuestbookServiceImpl implements GuestbookService {
                 .map(GuestbookDto::from)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     @Transactional
     public void modifyGuestbook(GuestbookDto newGuestbookDto) {
         Guestbook oldGuestbook = guestbookRepository.findById(newGuestbookDto.getId())
-                .orElseThrow(() -> new RuntimeException("방명록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new GuestbookNotFoundException(ErrorCode.GUESTBOOK_NOT_FOUND));
 
         validatePassword(oldGuestbook, newGuestbookDto);
         updateGuestbookDetails(oldGuestbook, newGuestbookDto);
@@ -43,7 +47,7 @@ public class GuestbookServiceImpl implements GuestbookService {
 
     private void validatePassword(Guestbook oldGuestbook, GuestbookDto newGuestbookDto) {
         if (!oldGuestbook.getPassword().equals(newGuestbookDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new GuestbookPasswordMismatchException(ErrorCode.GUESTBOOK_PASSWORD_MISMATCH);
         }
     }
 
@@ -51,4 +55,10 @@ public class GuestbookServiceImpl implements GuestbookService {
         oldGuestbook.changeAuthor(newGuestbookDto.getAuthor());
         oldGuestbook.changeMessage(newGuestbookDto.getMessage());
     }
+
+    @Override
+    public void deleteGuestbook() {
+        guestbookRepository.deleteById(null);
+    }
+
 }

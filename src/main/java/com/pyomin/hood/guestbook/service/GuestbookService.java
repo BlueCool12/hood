@@ -9,4 +9,5 @@ public interface GuestbookService {
     void writeGuestbook(GuestbookDto dto);
     List<GuestbookDto> getAllGuestbooks();
     void modifyGuestbook(GuestbookDto dto);    
+    void deleteGuestbook();
 }
