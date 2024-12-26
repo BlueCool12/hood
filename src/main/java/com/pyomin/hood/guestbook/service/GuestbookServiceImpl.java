@@ -8,6 +8,7 @@ import com.pyomin.hood.guestbook.dto.GuestbookDto;
 import com.pyomin.hood.guestbook.entity.Guestbook;
 import com.pyomin.hood.guestbook.repository.GuestbookRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,11 +30,25 @@ public class GuestbookServiceImpl implements GuestbookService {
                 .map(GuestbookDto::from)
                 .collect(Collectors.toList());
     }
-
+    
     @Override
-    public void modifyGuestbook(GuestbookDto guestbookDto) {
-        Guestbook guestbookToModify = guestbookDto.toGuestbook();
-        guestbookRepository.updateGuestbook(guestbookToModify);
+    @Transactional
+    public void modifyGuestbook(GuestbookDto newGuestbookDto) {
+        Guestbook oldGuestbook = guestbookRepository.findById(newGuestbookDto.getId())
+                .orElseThrow(() -> new RuntimeException("방명록을 찾을 수 없습니다."));
+
+        validatePassword(oldGuestbook, newGuestbookDto);
+        updateGuestbookDetails(oldGuestbook, newGuestbookDto);
     }
 
+    private void validatePassword(Guestbook oldGuestbook, GuestbookDto newGuestbookDto) {
+        if (!oldGuestbook.getPassword().equals(newGuestbookDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void updateGuestbookDetails(Guestbook oldGuestbook, GuestbookDto newGuestbookDto) {
+        oldGuestbook.changeAuthor(newGuestbookDto.getAuthor());
+        oldGuestbook.changeMessage(newGuestbookDto.getMessage());
+    }
 }

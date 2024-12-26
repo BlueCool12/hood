@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,34 +32,29 @@ public class GuestbookServiceTest {
     private GuestbookServiceImpl guestbookService;
 
     private GuestbookDto guestbookDto;
+    private Guestbook guestbook;
 
     @BeforeEach
-    void setUp() {
+    void 테스트_준비() {
         MockitoAnnotations.openMocks(this);
-        guestbookDto = new GuestbookDto("author", "password", "message");
+        guestbook = new Guestbook(1L, "작성자", "1234", "메시지", LocalDateTime.now());
+        guestbookDto = new GuestbookDto("작성자", "1234", "메시지");
     }
 
     @Test
-    void testWriteSuccess() {
+    void 방명록_작성_성공() {
         // given
-        Guestbook guestbook = new Guestbook(
-                1L,
-                "author",
-                "password",
-                "message",
-                LocalDateTime.now());
-
-        // when
         when(guestbookRepository.save(any(Guestbook.class))).thenReturn(guestbook);
 
-        // then
+        // when
         guestbookService.writeGuestbook(guestbookDto);        
 
+        // then
         verify(guestbookRepository, times(1)).save(any(Guestbook.class));
     }
 
     @Test
-    void testWriteFailure() {
+    void 방명록_작성_실패() {
         // given
         when(guestbookRepository.save(any(Guestbook.class)))
                 .thenThrow(new RuntimeException("방명록 작성 실패"));
@@ -73,11 +69,10 @@ public class GuestbookServiceTest {
     }
 
     @Test
-    void testGetAllGuestbooks() {
+    void 방명록_목록_조회_성공() {
         // given
-        Guestbook guestbook1 = new Guestbook(1L, "author1", "password1", "message1", LocalDateTime.now());
-        Guestbook guestbook2 = new Guestbook(2L, "author2", "password2", "message2", LocalDateTime.now());
-
+        Guestbook guestbook1 = new Guestbook(1L, "author1", "1234", "message1", LocalDateTime.now());
+        Guestbook guestbook2 = new Guestbook(2L, "author2", "4321", "message2", LocalDateTime.now());
         when(guestbookRepository.findAll()).thenReturn(Arrays.asList(guestbook1, guestbook2));
 
         // when
@@ -97,4 +92,21 @@ public class GuestbookServiceTest {
 
         verify(guestbookRepository, times(1)).findAll();
     }
+
+    @Test
+    void 방명록_수정_성공() {
+        // given        
+        GuestbookDto newGuestbookDto = new GuestbookDto(1L, "newAuthor", "1234", "newMessage");
+        when(guestbookRepository.findById(1L)).thenReturn(Optional.of(guestbook));
+
+        // when
+        guestbookService.modifyGuestbook(newGuestbookDto);
+
+        // then                
+        assertEquals("newAuthor", guestbook.getAuthor());
+        assertEquals("newMessage", guestbook.getMessage());
+        
+        verify(guestbookRepository, times(1)).findById(1L);
+    }
+    
 }
