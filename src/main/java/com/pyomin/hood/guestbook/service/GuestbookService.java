@@ -6,8 +6,8 @@ import com.pyomin.hood.guestbook.dto.GuestbookDto;
 
 public interface GuestbookService {
 
-    void writeGuestbook(GuestbookDto dto);
+    void writeGuestbook(GuestbookDto guestbookDto);
     List<GuestbookDto> getAllGuestbooks();
-    void modifyGuestbook(GuestbookDto dto);    
-    void deleteGuestbook();
+    void modifyGuestbook(GuestbookDto guestbookDto);    
+    void deleteGuestbook(GuestbookDto guestbookDto);
 }

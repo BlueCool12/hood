@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pyomin.hood.common.dto.ResponseWrapper;
 import com.pyomin.hood.guestbook.dto.GuestbookDto;
 import com.pyomin.hood.guestbook.dto.request.CreateGuestbookRequest;
+import com.pyomin.hood.guestbook.dto.request.DeleteGuestbookRequest;
 import com.pyomin.hood.guestbook.dto.request.UpdateGuestbookRequest;
 import com.pyomin.hood.guestbook.dto.response.AllGuestbooksResponse;
 import com.pyomin.hood.guestbook.service.GuestbookService;
@@ -52,7 +53,9 @@ public class GuestbookController {
 
     @PutMapping("/{id}")
     public ResponseWrapper<Void> updateGuestbook(@PathVariable("id") Long id,
-            @Valid @RequestBody UpdateGuestbookRequest request) {                
+            @Valid @RequestBody UpdateGuestbookRequest request) {
+
+        request.setId(id);
         GuestbookDto guestbookDto = request.toGuestbookDto();
         guestbookService.modifyGuestbook(guestbookDto);
 
@@ -63,7 +66,16 @@ public class GuestbookController {
     }
 
     @DeleteMapping
-    public void deleteGuestbook(@PathVariable("id") Long id) {        
-        guestbookService.deleteGuestbook();
+    public ResponseWrapper<Void> deleteGuestbook(@PathVariable("id") Long id,
+            @Valid @RequestBody DeleteGuestbookRequest request) {
+
+        request.setId(id);
+        GuestbookDto guestbookDto = request.toGuestbookDto();
+        guestbookService.deleteGuestbook(guestbookDto);
+
+        return ResponseWrapper.<Void>builder()
+                .success(true)
+                .message("방명록이 성공적으로 삭제되었습니다.")
+                .build();
     }
 }

@@ -36,6 +36,11 @@ public class GuestbookDto {
         this.message = message;
     }
 
+    public GuestbookDto(Long id, String password) {
+        this.id = id;
+        this.password = password;
+    }
+
     public static GuestbookDto from(Guestbook guestbook) {
         return new GuestbookDto(
                 guestbook.getId(),

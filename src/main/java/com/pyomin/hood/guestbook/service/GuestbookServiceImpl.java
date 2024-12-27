@@ -38,27 +38,31 @@ public class GuestbookServiceImpl implements GuestbookService {
     @Override
     @Transactional
     public void modifyGuestbook(GuestbookDto newGuestbookDto) {
-        Guestbook oldGuestbook = guestbookRepository.findById(newGuestbookDto.getId())
+        Guestbook savedGuestbook = guestbookRepository.findById(newGuestbookDto.getId())
                 .orElseThrow(() -> new GuestbookNotFoundException(ErrorCode.GUESTBOOK_NOT_FOUND));
 
-        validatePassword(oldGuestbook, newGuestbookDto);
-        updateGuestbookDetails(oldGuestbook, newGuestbookDto);
+        validatePassword(savedGuestbook, newGuestbookDto);
+        updateGuestbookDetails(savedGuestbook, newGuestbookDto);
     }
 
-    private void validatePassword(Guestbook oldGuestbook, GuestbookDto newGuestbookDto) {
-        if (!oldGuestbook.getPassword().equals(newGuestbookDto.getPassword())) {
+    private void validatePassword(Guestbook savedGuestbook, GuestbookDto newGuestbookDto) {
+        if (!savedGuestbook.getPassword().equals(newGuestbookDto.getPassword())) {
             throw new GuestbookPasswordMismatchException(ErrorCode.GUESTBOOK_PASSWORD_MISMATCH);
         }
     }
 
-    private void updateGuestbookDetails(Guestbook oldGuestbook, GuestbookDto newGuestbookDto) {
-        oldGuestbook.changeAuthor(newGuestbookDto.getAuthor());
-        oldGuestbook.changeMessage(newGuestbookDto.getMessage());
+    private void updateGuestbookDetails(Guestbook savedGuestbook, GuestbookDto newGuestbookDto) {
+        savedGuestbook.changeAuthor(newGuestbookDto.getAuthor());
+        savedGuestbook.changeMessage(newGuestbookDto.getMessage());
     }
 
     @Override
-    public void deleteGuestbook() {
-        guestbookRepository.deleteById(null);
+    public void deleteGuestbook(GuestbookDto guestbookDto) {
+        Guestbook savedGuestbook = guestbookRepository.findById(guestbookDto.getId())
+                .orElseThrow(() -> new GuestbookNotFoundException(ErrorCode.GUESTBOOK_NOT_FOUND));
+
+        validatePassword(savedGuestbook, guestbookDto);
+        guestbookRepository.deleteById(savedGuestbook.getId());
     }
 
 }

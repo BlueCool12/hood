@@ -21,6 +21,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.pyomin.hood.guestbook.dto.GuestbookDto;
 import com.pyomin.hood.guestbook.entity.Guestbook;
+import com.pyomin.hood.guestbook.exception.GuestbookNotFoundException;
+import com.pyomin.hood.guestbook.exception.GuestbookPasswordMismatchException;
 import com.pyomin.hood.guestbook.repository.GuestbookRepository;
 
 public class GuestbookServiceTest {
@@ -38,7 +40,7 @@ public class GuestbookServiceTest {
     void 테스트_준비() {
         MockitoAnnotations.openMocks(this);
         guestbook = new Guestbook(1L, "작성자", "1234", "메시지", LocalDateTime.now());
-        guestbookDto = new GuestbookDto("작성자", "1234", "메시지");
+        guestbookDto = new GuestbookDto(1L, "작성자", "1234", "메시지", LocalDateTime.now());
     }
 
     @Test
@@ -47,7 +49,7 @@ public class GuestbookServiceTest {
         when(guestbookRepository.save(any(Guestbook.class))).thenReturn(guestbook);
 
         // when
-        guestbookService.writeGuestbook(guestbookDto);        
+        guestbookService.writeGuestbook(guestbookDto);
 
         // then
         verify(guestbookRepository, times(1)).save(any(Guestbook.class));
@@ -95,18 +97,52 @@ public class GuestbookServiceTest {
 
     @Test
     void 방명록_수정_성공() {
-        // given        
+        // given
         GuestbookDto newGuestbookDto = new GuestbookDto(1L, "newAuthor", "1234", "newMessage");
         when(guestbookRepository.findById(1L)).thenReturn(Optional.of(guestbook));
 
         // when
         guestbookService.modifyGuestbook(newGuestbookDto);
 
-        // then                
+        // then
         assertEquals("newAuthor", guestbook.getAuthor());
         assertEquals("newMessage", guestbook.getMessage());
-        
+
         verify(guestbookRepository, times(1)).findById(1L);
     }
-    
+
+    @Test
+    void 방명록_삭제_성공() {
+        // given
+        when(guestbookRepository.findById(1L)).thenReturn(Optional.of(guestbook));
+
+        // when
+        guestbookService.deleteGuestbook(guestbookDto);
+
+        // then
+        verify(guestbookRepository, times(1)).findById(1L);
+        verify(guestbookRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void 방명록_삭제_방명록_없음() {
+        // given
+        when(guestbookRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(GuestbookNotFoundException.class,
+                () -> guestbookService.deleteGuestbook(guestbookDto));
+    }
+
+    @Test
+    void 방명록_삭제_비밀번호_불일치() {
+        // given
+        GuestbookDto passwordMismatchDto = new GuestbookDto(1L, "4321");
+        when(guestbookRepository.findById(1L)).thenReturn(Optional.of(guestbook));
+
+        // when & then
+        assertThrows(GuestbookPasswordMismatchException.class,
+                () -> guestbookService.deleteGuestbook(passwordMismatchDto));
+    }
+
 }
